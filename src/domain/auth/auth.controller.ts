@@ -1,7 +1,8 @@
-import { Controller, Post, HttpStatus } from '@nestjs/common';
+import { Controller, Post, HttpStatus, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { createResponse } from 'src/common/utils/response';
 import { actionMap } from 'src/common/log/action-map';
+import { CreateAuthDto } from './dto/create-auth.dto';
 
 @Controller('auth')
 // @UseInterceptors(TransformInterceptor)
@@ -26,10 +27,22 @@ export class AuthController {
     }
   }
 
-  // @Post()
-  // create(@Body() createAuthDto: CreateAuthDto) {
-  //   // return this.authService.create(createAuthDto);
-  // }
+  @Post()
+  create(@Body() createAuthDto: CreateAuthDto) {
+    try {
+      return createResponse(HttpStatus.OK, actionMap['welcome'], {
+        username: createAuthDto.username,
+      });
+      // return this.authService.create(createAuthDto);
+    } catch (error) {
+      return createResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        actionMap['created successfully'],
+        [],
+        error,
+      );
+    }
+  }
 
   // @Get()
   // findAll() {
